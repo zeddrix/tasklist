@@ -65,9 +65,16 @@ const removeTask = (e) => {
   }
 };
 
+const clearTasksFromLS = () => {
+  localStorage.clear();
+};
+
 const clearTasks = () => {
-  while (taskList.firstChild) {
-    taskList.removeChild(taskList.firstChild);
+  if (confirm("Are you sure you want to clear ALL your tasks?")) {
+    while (taskList.firstChild) {
+      taskList.removeChild(taskList.firstChild);
+    }
+    clearTasksFromLS();
   }
 };
 
