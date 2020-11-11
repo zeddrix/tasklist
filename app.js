@@ -23,8 +23,18 @@ const addTask = (e) => {
   }
 };
 
+const removeTask = (e) => {
+  if (e.target.parentElement.matches(".delete-item")) {
+    if (confirm("Are you sure?")) {
+      e.target.parentElement.parentElement.remove();
+    }
+  } else {
+  }
+};
+
 const loadEventListeners = () => {
   form.addEventListener("submit", addTask);
+  taskList.addEventListener("click", removeTask);
 };
 
 loadEventListeners();
