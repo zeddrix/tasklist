@@ -5,6 +5,7 @@ const filter = document.querySelector("#filter");
 const taskInput = document.querySelector("#task");
 
 let li;
+let tasks;
 
 const createTaskElements = () => {
   li = document.createElement("li");
@@ -15,16 +16,17 @@ const createTaskElements = () => {
   li.appendChild(link);
 };
 
-const storeTaskInLS = (task) => {
-  let tasks;
+const checkLS = () => {
   if (localStorage.getItem("tasks") === null) {
     tasks = [];
   } else {
     tasks = JSON.parse(localStorage.getItem("tasks"));
   }
+};
 
+const addTaskInLS = (task) => {
+  checkLS();
   tasks.push(task);
-
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
@@ -34,19 +36,31 @@ const addTask = (e) => {
   } else {
     createTaskElements();
     li.appendChild(document.createTextNode(taskInput.value));
-
     taskList.appendChild(li);
-    storeTaskInLS(taskInput.value);
-
+    addTaskInLS(taskInput.value);
     taskInput.value = "";
     e.preventDefault();
   }
 };
 
+const removeTaskFromLS = (taskItem) => {
+  checkLS();
+
+  tasks.forEach((task, index) => {
+    if (taskItem.textContent === task) {
+      tasks.splice(index, 1);
+    }
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
 const removeTask = (e) => {
   if (e.target.parentElement.matches(".delete-item")) {
     if (confirm("Are you sure?")) {
-      e.target.parentElement.parentElement.remove();
+      const selectedLi = e.target.parentElement.parentElement;
+      selectedLi.remove();
+
+      removeTaskFromLS(selectedLi);
     }
   }
 };
@@ -79,17 +93,10 @@ const loadEventListeners = () => {
 };
 
 const getTasksFromLS = () => {
-  let tasks;
-  if (localStorage.getItem("tasks") === null) {
-    tasks = [];
-  } else {
-    tasks = JSON.parse(localStorage.getItem("tasks"));
-  }
-
+  checkLS();
   tasks.forEach((task) => {
     createTaskElements();
     li.appendChild(document.createTextNode(task));
-
     taskList.appendChild(li);
   });
 };
