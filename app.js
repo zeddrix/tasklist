@@ -32,9 +32,16 @@ const removeTask = (e) => {
   }
 };
 
+const clearTasks = () => {
+  while (taskList.firstChild) {
+    taskList.removeChild(taskList.firstChild);
+  }
+};
+
 const loadEventListeners = () => {
   form.addEventListener("submit", addTask);
   taskList.addEventListener("click", removeTask);
+  clearBtn.addEventListener("click", clearTasks);
 };
 
 loadEventListeners();
